@@ -1,18 +1,26 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-container fluid>
+    <TopSetting :isHome="true"></TopSetting>
+  </v-container>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import TopSetting from '../components/TopSetting'
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
+    name: 'Home',
+    components:{
+      TopSetting
+    },
+    data: () => ({
+      
+    }),
+    methods:{
+      
+    }
 }
 </script>
+
+<style>
+
+</style>
