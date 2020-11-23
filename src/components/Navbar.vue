@@ -18,7 +18,7 @@
     <!-- Side nav -->
      <v-navigation-drawer app class="nav-drawer" v-else>
       <v-img 
-      src="/img/company.jpg"
+      src="../assets/logo.jpeg"
       max-height="50"
       aspect-ratio="0.5"
       class="ma-5"
@@ -58,9 +58,8 @@ export default {
     data: () => ({
         items: [
           { title: 'Beranda', icon: 'mdi-home-city', link: '/' },
-          { title: 'Penggunaan Listrik', icon: 'mdi-flash', link: '/electricity' },
-          { title: 'Dashboard Admin', icon: 'mdi-view-dashboard', link: '/dashboard' },
-          { title: 'Setting Akun', icon: 'mdi-account', link: '/account' },
+          { title: 'Datalog', icon: 'mdi-flash', link: '/electricity' },
+          { title: 'Akun', icon: 'mdi-account', link: '/account' },
         ],
     }),
     computed:{

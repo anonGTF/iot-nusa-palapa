@@ -15,6 +15,7 @@
           flat
           class="top-setting px-3 pt-1 text-body-2"
           v-if="isHome"
+          @change="updateSelectedChart"
         >
             <template v-slot:selection="{ item, index }">
               <span class="d-md-block d-none">
@@ -42,6 +43,7 @@
           flat
           class="top-setting px-3 pt-1 ml-2 text-body-2"
           v-if="isHome"
+          @change="updateSelectedTime"
         >
         </v-select>
       </v-col>
@@ -116,12 +118,18 @@ export default {
           return name.substr(0,14) + '...';
         }
         return name;
+      },
+      updateSelectedChart(){
+        this.$emit('updateChart', this.valueChart)
+      },
+      updateSelectedTime(){
+        this.$emit('updateTime', this.valueTime)
       }
     }
 }
 </script>
 
-<style scoped>
+<style>
 .top-setting{
   background-color: #f2f2f2;
   border-radius: 25px;

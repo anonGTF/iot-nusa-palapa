@@ -1,5 +1,7 @@
 <template>
-  <v-container fluid>
+<div>
+  <Navbar></Navbar>
+<v-container fluid>
     <TopSetting></TopSetting>
     <v-row>
       <v-col
@@ -39,7 +41,14 @@
             </v-simple-table>
           </v-card-text>
           <v-card-actions class="px-5 pb-5">
-            <v-btn small text-uppercase primary @click.stop="dialog = true">
+            <v-btn 
+            small 
+            text-uppercase 
+            class="pa-3 primary"
+            @click.stop="dialog = true">
+            <v-icon left>
+              mdi-pencil
+            </v-icon>
             Edit Akun
             </v-btn>
             <v-dialog max-width="600px" v-model="dialog">
@@ -92,15 +101,18 @@
       </v-col>
     </v-row>
   </v-container>
+</div>
 </template>
 
 <script>
+import Navbar from '../components/Navbar'
 import TopSetting from '../components/TopSetting'
 
 export default {
     name: 'Account',
     components: {
-      TopSetting
+      TopSetting,
+      Navbar
     },
     data: () => ({
       loading: false,

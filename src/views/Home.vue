@@ -1,6 +1,12 @@
 <template>
-  <v-container fluid>
-    <TopSetting :isHome="true"></TopSetting>
+  <div>
+    <Navbar></Navbar>
+    <v-container fluid>
+    <TopSetting 
+    :isHome="true" 
+    @updateChart="onChartUpdate" 
+    @updateTime="onTimeUpdate">
+    </TopSetting>
     <v-row
     no-gutters
     class="px-lg-10 px-2 pt-10"
@@ -37,15 +43,16 @@
             elevation="5"
             rounded="xl"
           >
-            <div class="d-flex flex-no-wrap">
-              <v-avatar
-                class="ml-5 my-auto"
-                size="50"
+            <div class="d-flex flex-no-wrap align-center">                
+              <v-icon
+              x-large
+              class="pl-7 pr-2"
+              :color="mid.iconColor"
               >
-                <v-img :src="mid.icon"></v-img>
-              </v-avatar>
+                {{ mid.icon }}
+              </v-icon>
               <div>
-                <v-card-title class="headline" v-text="mid.data"></v-card-title>
+                <v-card-title class="font-weight-black" v-text="mid.data"></v-card-title>
                 <v-card-subtitle v-text="mid.title"></v-card-subtitle>
               </div>
             </div>
@@ -73,25 +80,21 @@
       </v-col>
     </v-row>
   </v-container>
+  </div>
 </template>
 
 <script>
+import Navbar from '../components/Navbar'
 import TopSetting from '../components/TopSetting'
 import LineChart from '../components/LineChart'
 import BarChart from '../components/BarChart'
-import mqtt from 'mqtt';
 
-const client = mqtt.connect("ws://18.207.248.164:8000/")
-client.on("connect", () => {
-  console.log("Connected!")
-  client.subscribe(("sensor/electric"), err => {
-    if(err) console.error(err);
-  })
-})
+import client from '../utils/ws'
 
 export default {
     name: 'Home',
     components:{
+      Navbar,
       TopSetting,
       LineChart,
       BarChart
@@ -107,19 +110,22 @@ export default {
         { 
           title: "Total Biaya Listrik", 
           data: "Rp 5.720.000", 
-          icon: "https://cdn.vuetifyjs.com/images/cards/foster.jpg", 
+          icon: "mdi-wallet", 
+          iconColor: "blue",
           class: "pr-lg-4 pr-0 mb-2"
         },
         { 
           title: "Total Daya", 
-          data: "15.000 VA", 
-          icon: "https://cdn.vuetifyjs.com/images/cards/foster.jpg", 
+          data: "15.000 kWh", 
+          icon: "mdi-flash-circle", 
+          iconColor: "yellow",
           class: "pr-lg-4 pr-0 mb-2"
         },
         { 
           title: "Ruangan terboros", 
           data: "Ruang produksi 1", 
-          icon: "https://cdn.vuetifyjs.com/images/cards/foster.jpg", 
+          icon: "mdi-home-alert", 
+          iconColor: "red",
           class: "mb-2"
         },
       ],
@@ -148,7 +154,8 @@ export default {
                 point: {
                   radius:0
                 }
-              }
+              },
+              animation: { duration: 0 }
             }
     }),
     methods:{
@@ -160,9 +167,11 @@ export default {
           }
           this.iniData.push(data);
           this.iniDataBar.push(msg.toString());
-          this.iniLabel.push("l");
+          this.iniLabel.push(new Date().toDateString());
           this.iniLabelBar.push("l");
           if (this.iniDataBar.length > 6) {
+            this.iniData.shift();
+            this.iniLabel.shift();            
             this.iniDataBar.shift();
             this.iniLabelBar.shift();            
           }
@@ -190,6 +199,14 @@ export default {
             labels: this.iniLabelBar,
             responsive: true
           }
+      },
+      onChartUpdate(data){
+        // data berupa array
+        console.log(data);
+      },
+      onTimeUpdate(data){
+        // data berupa string
+        console.log(data);
       }
     },
     created: function(){
