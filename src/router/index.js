@@ -5,6 +5,7 @@ import Account from '../views/Account.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Electricity from '../views/Electricity.vue'
 import Login from '../views/Login.vue'
+import Coba from '../views/Coba.vue'
 
 Vue.use(VueRouter)
 
@@ -32,6 +33,11 @@ const routes = [{
         path: '/login',
         name: 'Login',
         component: Login
+    },
+    {
+        path: '/coba',
+        name: 'Coba',
+        component: Coba
     },
 ]
 

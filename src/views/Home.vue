@@ -10,11 +10,16 @@
       >
         <v-card
         elevation="5"
-        rounded="xl">
+        rounded="xl"
+        class="d-none d-md-block"
+        >
           <v-card-text>
-            <LineChart :chartData="chartData" :height="chartHeight" ></LineChart>
+            <LineChart :chartData="chartData" :options="options" :height="200" ></LineChart>
           </v-card-text>
         </v-card>
+        <div class="d-sm-block d-md-none">
+          <LineChart :chartData="chartData" :options="options" :height="200" ></LineChart>
+        </div>
       </v-col>
     </v-row>
     <v-row
@@ -49,11 +54,22 @@
     </v-row>
     <v-row
     no-gutters
+    class="px-lg-10 px-2 pt-10"
     >
       <v-col
       cols="12"
       >
-
+        <v-card
+        elevation="5"
+        rounded="xl"
+        class="d-none d-md-block">
+          <v-card-text>
+            <BarChart :chartData="barData" :height="100"></BarChart>
+          </v-card-text>
+        </v-card>
+        <div class="d-sm-block d-md-none">
+          <BarChart :chartData="barData" :height="200"></BarChart>
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -62,25 +78,31 @@
 <script>
 import TopSetting from '../components/TopSetting'
 import LineChart from '../components/LineChart'
+import BarChart from '../components/BarChart'
+import mqtt from 'mqtt';
+
+const client = mqtt.connect("ws://18.207.248.164:8000/")
+client.on("connect", () => {
+  console.log("Connected!")
+  client.subscribe(("sensor/electric"), err => {
+    if(err) console.error(err);
+  })
+})
 
 export default {
     name: 'Home',
     components:{
       TopSetting,
       LineChart,
+      BarChart
     },
     data: () => ({
-      chartData: {
-        datasets: [{
-          data: [100,120,135,140,160,185],
-          label: "penggunaan daya total bulan ini",
-          borderColor:'rgba(0,0,255,1)',
-          fill: false
-        }],
-        labels: ["1", "2", "3", "4", "5", "6"],
-        responsive: true
-      },
-      chartHeight: 100,
+      chartData: null,
+      iniData: [],
+      iniLabel:[],
+      iniDataBar: [],
+      iniLabelBar:[],
+      barData: null,
       middleData: [
         { 
           title: "Total Biaya Listrik", 
@@ -100,10 +122,81 @@ export default {
           icon: "https://cdn.vuetifyjs.com/images/cards/foster.jpg", 
           class: "mb-2"
         },
-      ]
+      ],
+      options: { //Chart.js options
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  },
+                  gridLines: {
+                    display: true
+                  }
+                }],
+                xAxes: [ {
+                  gridLines: {
+                    display: false
+                  }
+                }]
+              },
+              legend: {
+                display: true
+              },
+              responsive: true,
+              maintainAspectRatio: false,
+              elements:{
+                point: {
+                  radius:0
+                }
+              }
+            }
     }),
     methods:{
-      
+      fillData(){
+        client.on("message", (topic, msg) => {
+          let data = parseFloat(msg.toString());
+          if (this.iniData.length > 1) {
+            data = this.iniData[this.iniData.length - 1] + parseFloat(msg.toString())
+          }
+          this.iniData.push(data);
+          this.iniDataBar.push(msg.toString());
+          this.iniLabel.push("l");
+          this.iniLabelBar.push("l");
+          if (this.iniDataBar.length > 6) {
+            this.iniDataBar.shift();
+            this.iniLabelBar.shift();            
+          }
+          this.updateData()
+        })
+      },
+      updateData(){
+        this.chartData = {
+            datasets: [{
+              data: this.iniData,
+              label: "penggunaan daya total bulan ini",
+              borderColor:'rgba(0,0,255,1)',
+              fill: true
+            }],
+            labels: this.iniLabel,
+            responsive: true
+          }
+          this.barData = {
+            datasets: [{
+              data: this.iniDataBar,
+              label: "penggunaan daya tiap room",
+              borderColor:'rgba(0,0,255,1)',
+              fill: false
+            }],
+            labels: this.iniLabelBar,
+            responsive: true
+          }
+      }
+    },
+    created: function(){
+      this.fillData();
+    },
+    mounted: function() {
+      this.fillData();
     }
 }
 </script>

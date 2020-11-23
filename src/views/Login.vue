@@ -4,6 +4,7 @@
           <v-col
           cols="8"
           color="red"
+          class="d-none d-lg-block"
           >
             <v-img
             alt="login"
@@ -14,11 +15,11 @@
           </v-col>
           <v-col
           cols="4"
-          class="d-flex justify-center align-center">
+          class="d-lg-flex d-md-block justify-center align-center">
               <v-card 
               class="pa-3"
-              height="52%"
-              width="80%">
+              height="55vh"
+              width="50vh">
                 <v-img 
                   src="/img/company.jpg"
                   max-height="100"

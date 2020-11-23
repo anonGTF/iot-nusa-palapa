@@ -1,6 +1,6 @@
 <template>
   <v-app>
-   <Navbar :v-if="true"></Navbar>
+   <Navbar :v-if="loggedIn"></Navbar>
     <v-main>
       <transition name="fade" mode="out-in">
         <router-view></router-view>
@@ -20,11 +20,11 @@ export default {
   },
 
   data: () => ({
-    
+    loggedIn: false
   }),
   computed:{
     loggedIn: ()=> {
-      return true;
+      return false;
     }
   }
 };
