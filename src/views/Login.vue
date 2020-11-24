@@ -74,10 +74,14 @@ export default {
       ],
     }),
     methods:{
-      login(){
-        if (this.$refs.form.validate) {
+      async login(){
+        if (this.$refs.form.validate()) {
           console.log(this.email, this.password);
-          this.$router.push("/");
+          await this.$store.dispatch('user/masuk', {
+            userEmail: this.email,
+            password: this.password
+          })
+          if (this.$store.state.user.loggedIn) this.$router.push("/");
         } 
       }
     }

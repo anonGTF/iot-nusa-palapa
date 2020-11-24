@@ -101,11 +101,14 @@ export default {
     },
     data: () => ({
       chartData: null,
-      iniData: [],
-      iniLabel:[],
-      iniDataBar: [],
-      iniLabelBar:[],
       barData: null,
+      lineTotalData: [],
+      lineRuang1Data: [],
+      lineRuang2Data: [],
+      lineRuang3Data: [],
+      lineUtamaLabel:[],
+      barUtamaData: [],
+      barUtamaLabel:[],
       middleData: [
         { 
           title: "Total Biaya Listrik", 
@@ -162,18 +165,18 @@ export default {
       fillData(){
         client.on("message", (topic, msg) => {
           let data = parseFloat(msg.toString());
-          if (this.iniData.length > 1) {
-            data = this.iniData[this.iniData.length - 1] + parseFloat(msg.toString())
+          if (this.lineTotalData.length > 1) {
+            data = this.lineTotalData[this.lineTotalData.length - 1] + parseFloat(msg.toString())
           }
-          this.iniData.push(data);
-          this.iniDataBar.push(msg.toString());
-          this.iniLabel.push(new Date().toDateString());
-          this.iniLabelBar.push("l");
-          if (this.iniDataBar.length > 6) {
-            this.iniData.shift();
-            this.iniLabel.shift();            
-            this.iniDataBar.shift();
-            this.iniLabelBar.shift();            
+          this.lineTotalData.push(data);
+          this.barUtamaData.push(msg.toString());
+          this.lineUtamaLabel.push(new Date().toDateString());
+          this.barUtamaLabel.push("l");
+          if (this.barUtamaData.length > 6) {
+            this.lineTotalData.shift();
+            this.lineUtamaLabel.shift();            
+            this.barUtamaData.shift();
+            this.barUtamaLabel.shift();            
           }
           this.updateData()
         })
@@ -200,6 +203,18 @@ export default {
             responsive: true
           }
       },
+      // setData(msg){
+      //   const dataArr = msg.toString.split('#');
+      //   const value = dataArr[0];
+      //   const time = dataArr[1];
+      //   const room = dataArr[2];
+
+
+      // },
+      // async testKirim(){
+      //   const res = await kirimData();
+      // console.log(res);
+      // },
       onChartUpdate(data){
         // data berupa array
         console.log(data);
@@ -212,8 +227,11 @@ export default {
     created: function(){
       this.fillData();
     },
-    mounted: function() {
+    mounted: async function() {
       this.fillData();
+      await this.$store.dispatch('datalog/getData', {
+        roomId: 1
+      })
     }
 }
 </script>

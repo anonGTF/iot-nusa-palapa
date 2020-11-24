@@ -19,21 +19,21 @@
               <tbody>
                 <tr>
                   <th>NIP</th>
-                  <td>2110191043</td>
+                  <td>{{ getUserData.userID }}</td>
                 </tr>
                 <tr>
                   <th>Nama</th>
-                  <td>Galih Tegar Febrianto</td>
+                  <td>{{ getUserData.userName }}</td>
                 </tr>
                 <tr>
                   <th>Email</th>
-                  <td>anongtf26@gmail.com</td>
+                  <td>{{ getUserData.userEmail }}</td>
                 </tr>
                 <tr>
                   <th>Profile Pict</th>
                   <td class="pt-2">
                     <v-avatar>
-                      <v-img src="https://randomuser.me/api/portraits/men/32.jpg"></v-img>
+                      <v-img :src="getUserData.userAva"></v-img>
                     </v-avatar>
                   </td>
                 </tr>
@@ -107,6 +107,7 @@
 <script>
 import Navbar from '../components/Navbar'
 import TopSetting from '../components/TopSetting'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'Account',
@@ -143,6 +144,12 @@ export default {
           console.log(this.name,this.nip,this.email);
         }
       }
+    },
+    computed: {
+      ...mapGetters('user', ['getUserData'])
+    },
+    mounted(){
+      console.log(this.getUserData);
     }
 }
 </script>

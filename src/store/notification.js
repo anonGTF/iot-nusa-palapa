@@ -18,7 +18,7 @@ const mutations = {
 
 const actions = {
     showNotification({ commit }, { apakahTampil, pesan }) {
-        commit('setNotifikation', {
+        commit('setNotification', {
             apakahTampil,
             pesan
         })

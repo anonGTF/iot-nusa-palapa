@@ -50,9 +50,9 @@
       <!-- User -->
       <v-col cols="3" class="pl-2 d-lg-flex justify-center d-none">
         <v-avatar size="40">
-          <v-img :src="user.avatar"></v-img>
+          <v-img :src="this.$store.state.user.userAva"></v-img>
         </v-avatar>
-        <span class="font-weight-black px-2 pt-2"> {{ user.name }} </span>
+        <span class="font-weight-black px-2 pt-2"> {{ this.$store.state.user.userName }} </span>
         <v-menu 
         bottom
         offset-y>
@@ -73,7 +73,7 @@
                 link
                 ripple
                 router
-                :to="item.link"
+                @click="accountClick(item.click)"
               >
                 <v-list-item-title>{{ item.name }}</v-list-item-title>
               </v-list-item>
@@ -108,8 +108,8 @@ export default {
           'Tahun ini'
         ],
         accountItems: [
-          {name: 'Setting Akun', link:'/account'},
-          {name: 'Keluar', link: '/login'}
+          {name: 'Setting Akun', link:'/account', click: 'akun'},
+          {name: 'Keluar', link: '/login', click: 'keluar'}
         ]
     }),
     methods:{
@@ -124,6 +124,10 @@ export default {
       },
       updateSelectedTime(){
         this.$emit('updateTime', this.valueTime)
+      },
+      accountClick(id){
+        if (id == 'akun') this.$router.push('/account')
+        else if (id == 'keluar') this.$store.dispatch('user/keluar') 
       }
     }
 }

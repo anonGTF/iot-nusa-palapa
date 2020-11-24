@@ -1,3 +1,4 @@
+import router from '../router'
 import { URL_API } from "../constants"
 import { kirimData } from '../utils'
 
@@ -6,42 +7,58 @@ function state() {
         userID: null,
         userName: null,
         userEmail: null,
-        userAva: null
+        userAva: null,
+        loggedIn: false
     }
 }
 
 const mutations = {
-    setUserData(state, { userID, userName, userEmail, userAva }) {
-        state.userID = userID
-        state.userName = userName
-        state.userEmail = userEmail
-        state.userAva = userAva
+    setUserData(state) {
+        state.userID = 2110191043
+        state.userName = 'Galih Tegar T'
+        state.userEmail = 'guess@mail.com'
+        state.userAva = 'https://randomuser.me/api/portraits/men/32.jpg'
+        state.loggedIn = true
     },
     resetUserData(state) {
         state.userID = null
         state.userName = null
         state.userEmail = null
         state.userAva = null
+        state.loggedIn = false
+    }
+}
+
+const getters = {
+    getUserData(state) {
+        return {
+            userID: state.userID,
+            userName: state.userName,
+            userEmail: state.userEmail,
+            userAva: state.userAva
+        }
+    },
+    isLoggedIn(state) {
+        return state.loggedIn
     }
 }
 
 const actions = {
     async masuk({ commit, dispatch }, { userEmail, password }) {
         try {
-            const url = `${URL_API}/user/login`
+            const url = `${URL_API}/user/auth`
 
-            const respon = await kirimData(url, {
-                email: userEmail,
-                password
-            })
+            const respon = await kirimData(url, `email=${userEmail}&password=${password}`)
 
-            if (respon.success && !respon.error) {
-                commit('setUserData', {
-                    userID: respon.data.id,
-                    userName: respon.data.name,
-                    userEmail: respon.data.email,
-                    userAva: respon.data.ava
-                })
+            if (respon) {
+                commit('setUserData',
+                    // {
+                    //     userID: respon.data.id,
+                    //     userName: respon.data.name,
+                    //     userEmail: respon.data.email,
+                    //     userAva: respon.data.ava
+                    // }
+                )
                 const dataNotification = {
                     apakahTampil: true,
                     pesan: 'Berhasil masuk'
@@ -95,6 +112,8 @@ const actions = {
     },
     keluar({ commit, dispatch }) {
         commit('resetUserData')
+        sessionStorage.clear();
+        router.push('/login')
         const dataNotifikasi = {
             apakahTampil: true,
             pesan: 'Berhasil keluar'
@@ -106,6 +125,7 @@ const actions = {
 export default {
     namespaced: true,
     state,
+    getters,
     mutations,
     actions
 }
