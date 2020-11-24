@@ -33,7 +33,7 @@
           v-model="ruangSelected"
           label="Pilih ruangan"
           outlined
-          class="mr-5"
+          class="mr-lg-5"
           @change="ruangChanged"
         ></v-select>
       <v-menu

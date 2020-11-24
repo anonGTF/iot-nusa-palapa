@@ -51,6 +51,17 @@
             </v-icon>
             Edit Akun
             </v-btn>
+            <v-btn 
+            small 
+            text-uppercase 
+            text
+            class="pa-3 ml-3"
+            @click="keluar">
+            <v-icon left>
+              mdi-logout-variant
+            </v-icon>
+            Keluar
+            </v-btn>
             <v-dialog max-width="600px" v-model="dialog">
             <v-card>
                 <v-card-title>
@@ -143,10 +154,13 @@ export default {
           this.dialog = false;
           console.log(this.name,this.nip,this.email);
         }
+      },
+      keluar(){
+        this.$store.dispatch('user/keluar') 
       }
     },
     computed: {
-      ...mapGetters('user', ['getUserData'])
+      ...mapGetters('user', ['getUserData', ])
     },
     mounted(){
       console.log(this.getUserData);
