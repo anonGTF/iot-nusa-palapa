@@ -90,6 +90,7 @@ import LineChart from '../components/LineChart'
 import BarChart from '../components/BarChart'
 
 import client from '../utils/ws'
+import { URL_API } from '../constants'
 
 export default {
     name: 'Home',
@@ -126,7 +127,7 @@ export default {
         },
         { 
           title: "Ruangan terboros", 
-          data: "Ruang produksi 1", 
+          data: "Ruang produksi 2", 
           icon: "mdi-home-alert", 
           iconColor: "red",
           class: "mb-2"
@@ -220,7 +221,14 @@ export default {
       this.fillData();
     },
     mounted: async function() {
-      this.middleData[0].data = `Rp ${this.$store.state.datalog.dataLog[3].cost}`
+      const urlCost = `${URL_API}/estimate/cost`
+      const urlTotal = `${URL_API}/sensor/value`
+
+      const costRes = await fetch(urlCost).then(res => res.json())
+      const totalRes = await fetch(urlTotal).then(res => res.json())
+
+      this.middleData[0].data = `Rp ${costRes.cost}`
+      this.middleData[1].data = `${totalRes.value} kWh`
     }
 }
 </script>
