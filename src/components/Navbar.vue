@@ -4,6 +4,7 @@
     <v-bottom-navigation
     color="primary"
     v-if="mobile"
+    grow
     app
     >
         <v-btn 
