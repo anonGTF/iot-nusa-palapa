@@ -164,17 +164,22 @@ export default {
     methods:{
       fillData(){
         client.on("message", (topic, msg) => {
+          console.log(msg.toString());
           let data = parseFloat(msg.toString());
+          let label = new Date().toDateString().split(' ');
+          label = `${label[2]}-${label[1]}`
           if (this.lineTotalData.length > 1) {
             data = this.lineTotalData[this.lineTotalData.length - 1] + parseFloat(msg.toString())
           }
           this.lineTotalData.push(data);
           this.barUtamaData.push(msg.toString());
-          this.lineUtamaLabel.push(new Date().toDateString());
-          if (this.barUtamaData.length > 3) {
-            this.lineTotalData.shift();
-            this.lineUtamaLabel.shift();            
+          this.lineUtamaLabel.push(label);
+          if (this.barUtamaData.length > 3) {           
             this.barUtamaData.shift();          
+          }
+          if (this.lineTotalData.length > 30) {
+            this.lineTotalData.shift();
+            this.lineUtamaLabel.shift(); 
           }
           this.updateData()
         })
@@ -202,18 +207,6 @@ export default {
             responsive: true
           }
       },
-      // setData(msg){
-      //   const dataArr = msg.toString.split('#');
-      //   const value = dataArr[0];
-      //   const time = dataArr[1];
-      //   const room = dataArr[2];
-
-
-      // },
-      // async testKirim(){
-      //   const res = await kirimData();
-      // console.log(res);
-      // },
       onChartUpdate(data){
         // data berupa array
         console.log(data);
@@ -227,10 +220,7 @@ export default {
       this.fillData();
     },
     mounted: async function() {
-      this.fillData();
-      await this.$store.dispatch('datalog/getData', {
-        roomId: 1
-      })
+      this.middleData[0].data = `Rp ${this.$store.state.datalog.dataLog[3].cost}`
     }
 }
 </script>

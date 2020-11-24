@@ -7,10 +7,11 @@ function state() {
 }
 
 const mutations = {
-    setDataLog(state, { name, log }) {
+    setDataLog(state, { name, log, cost }) {
         state.dataLog.push({
             name,
-            log
+            log,
+            cost
         })
     },
     resetUserData(state) {
@@ -32,13 +33,17 @@ const actions = {
         }
         try {
             const url = `${URL_API}/sensor/?room=${roomId}`
+            const urlCost = `${URL_API}/estimate/cost?room=${roomId}`
 
             const respon = await fetch(url)
             const data = await respon.json();
+            const cost = await fetch(urlCost).then(res => res.json())
+
             if (respon.ok) {
                 commit('setDataLog', {
                     name: `room-${data.room}`,
-                    log: data.log
+                    log: data.log,
+                    cost: cost.cost
                 })
             } else {
                 throw new Error(respon.message)
@@ -53,6 +58,8 @@ const actions = {
         }
     },
     async getSumData({ commit, getters }) {
+        const urlCost = `${URL_API}/estimate/cost`
+        const costRes = await fetch(urlCost).then(res => res.json())
         const dataLog = getters.getDataLog;
         //check if datalog 1 2 3 exist
         if (dataLog.length != 3) {
@@ -61,6 +68,7 @@ const actions = {
 
         const name = 'total'
         const log = []
+        const cost = costRes.cost
         for (let i = 0; i < dataLog[0].log.length; i++) {
             log.push({
                 time: dataLog[0].log[i].time,
@@ -70,7 +78,8 @@ const actions = {
 
         commit('setDataLog', {
             name,
-            log
+            log,
+            cost
         })
     }
 }

@@ -142,7 +142,7 @@ export default {
         this.chartData = {
             datasets: [{
               data: this.lineData,
-              label: "penggunaan daya total bulan ini",
+              label: `penggunaan daya total`,
               borderColor:'rgba(0,0,255,1)',
               fill: true
             }],
