@@ -20,7 +20,7 @@
           </v-card-text>
         </v-card>
         <div class="d-sm-block d-md-none">
-          <LineChart :chartData="chartData" :options="options" :height="500"></LineChart>
+          <LineChart :chartData="chartData" :options="options" :height="400"></LineChart>
         </div>
       </v-col>
     </v-row>
