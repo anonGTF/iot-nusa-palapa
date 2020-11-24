@@ -184,22 +184,22 @@ export default {
       updateData(){
         this.chartData = {
             datasets: [{
-              data: this.iniData,
+              data: this.lineTotalData,
               label: "penggunaan daya total bulan ini",
               borderColor:'rgba(0,0,255,1)',
               fill: true
             }],
-            labels: this.iniLabel,
+            labels: this.lineUtamaLabel,
             responsive: true
           }
           this.barData = {
             datasets: [{
-              data: this.iniDataBar,
+              data: this.barUtamaData,
               label: "penggunaan daya tiap room",
               borderColor:'rgba(0,0,255,1)',
               fill: false
             }],
-            labels: this.iniLabelBar,
+            labels: this.barUtamaLabel,
             responsive: true
           }
       },

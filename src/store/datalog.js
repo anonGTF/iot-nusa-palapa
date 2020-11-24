@@ -18,8 +18,18 @@ const mutations = {
     }
 }
 
+const getters = {
+    getDataLog(state) {
+        return state.dataLog
+    }
+}
+
 const actions = {
-    async getData({ commit, dispatch }, { roomId }) {
+    async getData({ commit, dispatch, getters }, { roomId }) {
+        const dataLog = getters.getDataLog;
+        if (dataLog.some(data => data.name == `room-${roomId}`)) {
+            return;
+        }
         try {
             const url = `${URL_API}/sensor/?room=${roomId}`
 
@@ -41,12 +51,34 @@ const actions = {
             dispatch('notification/showNotification', dataNotifikasiGalat, { root: true })
             console.log(error)
         }
+    },
+    async getSumData({ commit, getters }) {
+        const dataLog = getters.getDataLog;
+        //check if datalog 1 2 3 exist
+        if (dataLog.length != 3) {
+            return
+        }
+
+        const name = 'total'
+        const log = []
+        for (let i = 0; i < dataLog[0].log.length; i++) {
+            log.push({
+                time: dataLog[0].log[i].time,
+                value: dataLog[0].log[i].value + dataLog[1].log[i].value + dataLog[2].log[i].value
+            })
+        }
+
+        commit('setDataLog', {
+            name,
+            log
+        })
     }
 }
 
 export default {
     namespaced: true,
     state,
+    getters,
     mutations,
     actions
 }
