@@ -157,7 +157,7 @@ export default {
         dataLog.log.forEach((log, i) => {
             if (i == 0) this.lineData.push(log.value);
             else this.lineData.push(log.value + this.lineData[i - 1]);
-            this.lineLabel.push(log.time);
+            this.lineLabel.push(log.time.split('T')[0].split('-')[2]);
         });
       },
       timeChanged(){

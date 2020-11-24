@@ -108,7 +108,7 @@ export default {
       lineRuang3Data: [],
       lineUtamaLabel:[],
       barUtamaData: [],
-      barUtamaLabel:[],
+      barUtamaLabel:["ruang 1", "ruang 2", "ruang 3"],
       middleData: [
         { 
           title: "Total Biaya Listrik", 
@@ -171,12 +171,10 @@ export default {
           this.lineTotalData.push(data);
           this.barUtamaData.push(msg.toString());
           this.lineUtamaLabel.push(new Date().toDateString());
-          this.barUtamaLabel.push("l");
-          if (this.barUtamaData.length > 6) {
+          if (this.barUtamaData.length > 3) {
             this.lineTotalData.shift();
             this.lineUtamaLabel.shift();            
-            this.barUtamaData.shift();
-            this.barUtamaLabel.shift();            
+            this.barUtamaData.shift();          
           }
           this.updateData()
         })
@@ -197,6 +195,7 @@ export default {
               data: this.barUtamaData,
               label: "penggunaan daya tiap room",
               borderColor:'rgba(0,0,255,1)',
+              backgroundColor:['rgba(0,255,0,1)', 'rgba(255,0,0,1)', 'rgba(0,0,255,1)'],
               fill: false
             }],
             labels: this.barUtamaLabel,
