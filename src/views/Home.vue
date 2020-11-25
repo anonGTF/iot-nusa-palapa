@@ -113,21 +113,21 @@ export default {
       middleData: [
         { 
           title: "Total Biaya Listrik", 
-          data: "Rp 5.720.000", 
+          data: "please wait", 
           icon: "mdi-wallet", 
           iconColor: "blue",
           class: "pr-lg-4 pr-0 mb-2"
         },
         { 
           title: "Total Daya", 
-          data: "15.000 kWh", 
+          data: "please wait", 
           icon: "mdi-flash-circle", 
           iconColor: "yellow",
           class: "pr-lg-4 pr-0 mb-2"
         },
         { 
           title: "Ruangan terboros", 
-          data: "Ruang produksi 2", 
+          data: "please wait", 
           icon: "mdi-home-alert", 
           iconColor: "red",
           class: "mb-2"
@@ -165,7 +165,6 @@ export default {
     methods:{
       fillData(){
         client.on("message", (topic, msg) => {
-          console.log(msg.toString());
           let data = parseFloat(msg.toString());
           let label = new Date().toDateString().split(' ');
           label = `${label[2]}-${label[1]}`
@@ -196,17 +195,6 @@ export default {
             labels: this.lineUtamaLabel,
             responsive: true
           }
-          this.barData = {
-            datasets: [{
-              data: this.barUtamaData,
-              label: "penggunaan daya tiap room",
-              borderColor:'rgba(0,0,255,1)',
-              backgroundColor:['rgba(0,255,0,1)', 'rgba(255,0,0,1)', 'rgba(0,0,255,1)'],
-              fill: false
-            }],
-            labels: this.barUtamaLabel,
-            responsive: true
-          }
       },
       onChartUpdate(data){
         // data berupa array
@@ -223,12 +211,32 @@ export default {
     mounted: async function() {
       const urlCost = `${URL_API}/estimate/cost`
       const urlTotal = `${URL_API}/sensor/value`
+      let barData = []
 
       const costRes = await fetch(urlCost).then(res => res.json())
       const totalRes = await fetch(urlTotal).then(res => res.json())
+      for (let i = 1; i < 4; i++) {
+        let data = await fetch(`${urlTotal}?room=${i}`).then(res => res.json());
+        barData.push(parseFloat(data.value))
+      }
+
+      let ini = barData.indexOf(Math.max(...barData));
 
       this.middleData[0].data = `Rp ${costRes.cost}`
       this.middleData[1].data = `${totalRes.value} kWh`
+      this.middleData[2].data = `Ruang ${ini + 1}`
+
+      this.barData = {
+            datasets: [{
+              data: barData,
+              label: "penggunaan daya tiap room",
+              borderColor:'rgba(0,0,255,1)',
+              backgroundColor:['rgba(0,255,0,1)', 'rgba(255,0,0,1)', 'rgba(0,0,255,1)'],
+              fill: false
+            }],
+            labels: this.barUtamaLabel,
+            responsive: true
+          }
     }
 }
 </script>
